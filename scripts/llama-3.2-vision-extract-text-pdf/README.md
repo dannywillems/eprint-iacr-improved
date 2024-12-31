@@ -30,7 +30,8 @@ pip install ollama
 
 ## Run on an example
 
-The original PlonK paper will be used as an example:
+The original [PlonK](https://eprint.iacr.org/2019/953) paper will be used as an
+example:
 
 ```
 wget https://eprint.iacr.org/2019/953.pdf
