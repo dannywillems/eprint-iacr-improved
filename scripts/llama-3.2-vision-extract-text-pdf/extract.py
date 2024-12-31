@@ -3,7 +3,7 @@ from ollama import chat
 from ollama import ChatResponse
 import sys
 
-filename = sys.argv[1]
+filename = Path(sys.argv[1])
 
 # Temperature determines the randomness of the response.
 # 0.0 is deterministic.
@@ -11,12 +11,30 @@ filename = sys.argv[1]
 # We always want the same output.
 temperature=0.0
 
+prompt = """
+I have a PDF document. Please extract the text from the PDF and convert it into Markdown format. Use the following guidelines:
+1. Exact text:
+    - Extract the text exactly as it appears in the PDF, without summarizing or rephrasing.
+2. Markdown Structure:
+    - Use Markdown for headings, lists, and text formatting.
+    - Format author names, titles, and affiliations with appropriate heading levels (#, ##, ###, etc.).
+    - For emphasis, use * for italics and ** for bold text.
+3. LaTeX for Mathematical Content:
+    - Convert all mathematical symbols, formulas, and equations to LaTeX.
+    - Use single $...$ for inline math and $$...$$ or a math code block for block math.
+4. Maintain Formatting:
+    - Preserve the layout, such as bullet points, numbered lists, and sections.
+    - Reproduce section headers, labels, and any special text formatting.
+5. Meta Information:
+    - Include footnotes, author contact information, and dates as shown in the document.
+"""
+
 print("Processing %s" % filename)
 response = chat(
         model='llama3.2-vision',
         messages=[{
             'role': 'user',
-            'content': 'Here is a page of a research paper in cryptography, given as an image extracted from the original PDF. Extract the content into MarkDown using LaTeX for the equations and mathematical symbols. Keep the exact same content. Do not describe what is in the paper. The paper is splitted in different images, therefore do not add any section.',
+            'content': prompt,
             'images': [filename],
             'temperature': temperature,
         }],
